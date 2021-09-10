@@ -25,10 +25,10 @@ from matplotlib import pyplot
 def DispatchPlot(instance,TimeSeries,PlotScenario,PlotDate,PlotTime,PlotResolution,PlotFormat):
 
     print('\nPlots: plotting energy dispatch...')
-    fontticks = 18
+    fontticks = 212
     fonttitles = 16
-    fontaxis = 14
-    fontlegend = 14
+    fontaxis = 15
+    fontlegend = 15
     
     idx = pd.IndexSlice
     
@@ -460,8 +460,8 @@ def CashFlowPlot(instance,Results,PlotResolution,PlotFormat):
 def SizePlot(instance,Results,PlotResolution,PlotFormat):
 
     print('       plotting components size...')
-    fontticks = 18
-    fontaxis = 20
+    fontticks = 212
+    fontaxis = 21
     fontlegend = 20
     
     idx = pd.IndexSlice
