@@ -156,7 +156,7 @@ def DispatchPlot(instance,TimeSeries,PlotScenario,PlotDate,PlotTime,PlotResoluti
 
     ax1.stackplot(x_Plot, y_Stacked_pos, labels=Labels_pos, colors=Colors_pos, zorder=2)
     ax1.stackplot(x_Plot, y_Stacked_neg, labels=Labels_neg, colors=Colors_neg, zorder=2)
-    ax1.plot(x_Plot, y_Demand, linewidth=4, color='black', label='Demand', zorder=2)
+    ax1.plot(x_Plot, y_Demand, linewidth=2, linestyle='solid', marker=".", color='black', label='Demand', zorder=2)
     ax1.plot(x_Plot, np.zeros((len(x_Plot))), color='black', label='_nolegend_', zorder=2)
  
     ax1.set_xlabel('Time [Hours]', fontsize=fontaxis)
@@ -174,11 +174,23 @@ def DispatchPlot(instance,TimeSeries,PlotScenario,PlotDate,PlotTime,PlotResoluti
     ax1.set_xlim(xmin=0)
     ax1.set_xlim(xmax=xticks_position[-1])
     ax1.margins(x=0)
-        
+    ax1.tick_params(axis="x", direction="in")
+    ax1.tick_params(axis="y", direction="in") 
+    
     "primary y axis"
     # ax1.set_yticklabels(ax1.get_yticks(), fontsize=fontticks) 
     ax1.margins(y=0)
     ax1.grid(True, zorder=2)
+    #ax1.set_yticks(np.arange(None, None, 100))
+    #ax1.set_yticks([min(y),max(y)])
+    #matplotlib.axes.Axes.set_yscale(1, 'linear')
+    #ax1.grid(True, which='both')
+    stepy=(max(ax1.get_yticks())-min(ax1.get_yticks()))/10;
+    ax1.set_yticks(np.arange(min(ax1.get_yticks()) ,max(ax1.get_yticks())  , stepy ));
+    #import matplotlib.ticker as plticker
+    #loc = plticker.MultipleLocator() # this locator puts ticks at regular intervals
+    #ax1.yaxis.set_major_locator(loc)
+    
        
     "secondary y axis"
     if BESSNominalCapacity[PlotStep] >= 1:
@@ -191,6 +203,7 @@ def DispatchPlot(instance,TimeSeries,PlotScenario,PlotDate,PlotTime,PlotResoluti
         ax2.set_ylim(ymin=0)
         ax2.set_ylim(ymax=100.00000001)
         ax2.margins(y=0)
+        ax2.tick_params(axis="y", direction="in")    
 
     # ax1.text((ax1.get_xticks()[0] + ax1.get_xticks()[1])/4 ,ax1.get_yticks()[-2], 'Plot start at\n'+PlotDate, fontsize=fontlegend)
 
@@ -445,7 +458,7 @@ def CashFlowPlot(instance,Results,PlotResolution,PlotFormat):
     plt.xlabel('Years', fontsize=fontaxis)
     plt.ylabel('Thousand USD', fontsize=fontaxis)
     plt.xticks(x_positions, years, fontsize=fontticks)
-    plt.yticks(fontsize=fontticks)
+    plt.yticks(fontsize=fontticks, direction="in")
     plt.grid(True, axis='y', zorder=2)
     plt.margins(x=0.009)
     
@@ -580,7 +593,7 @@ def SizePlot(instance,Results,PlotResolution,PlotFormat):
             
         ax1.set_yticklabels(ax1.get_yticks(), fontsize=fontticks) 
         ax1.grid(True, axis='y', zorder=2)
-        ax2.set_yticklabels(ax2.get_yticks(), fontsize=fontticks) 
+        ax2.set_yticklabels(ax2.get_yticks(), fontsize=fontticks, direction="in") 
         ax2.grid(True, axis='y', zorder=2)
 
     fig.legend(bbox_to_anchor=(1.19,0.98), ncol=1, fontsize=fontlegend, frameon=True)

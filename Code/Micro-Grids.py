@@ -44,7 +44,7 @@ Results    = ResultsSummary(instance, Optimization_Goal, TimeSeries)
 
 #%% Plot and print-out
 PlotScenario = 1                    # Plot scenario
-PlotDate = '01/01/2019 00:00:00'    # Month-Day-Year. If devoid of meaning: Day-Month-Year
+PlotDate = '01/09/2019 00:00:00'    # Month-Day-Year. If devoid of meaning: Day-Month-Year
 PlotTime = 3                        # Number of days to be shown in the plot
 PlotFormat = 'png'                  # Desired extension of the saved file (Valid formats: png, svg, pdf)
 PlotResolution = 400                # Plot resolution in dpi (useful only for .png files, .svg and .pdf output a vector plot)
