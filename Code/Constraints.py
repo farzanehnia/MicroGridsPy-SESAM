@@ -279,8 +279,11 @@ def Renewable_Energy_Penetration(model,ut):
     E_gen = sum(model.Generator_Energy_Production[s,y,g,t]*model.Scenario_Weight[s]
                 for s,y,g,t in Foo)    
     E_ren = sum(model.RES_Energy_Production[s,y,r,t]*model.Scenario_Weight[s]
-                for s,y,r,t in foo)        
-    return  (1 - model.Renewable_Penetration)*E_ren >= model.Renewable_Penetration*E_gen   
+                for s,y,r,t in foo)      
+    if model.Renewable_Penetration == 1:
+        return E_gen == 0
+    else:
+        return (1 - model.Renewable_Penetration)*E_ren >= model.Renewable_Penetration*E_gen   
 
 def Renewables_Min_Step_Units(model,yt,ut,r):
     if ut > 1:
@@ -315,7 +318,11 @@ def Max_Bat_in(model,s,yt,ut,t): # Minimun flow of energy for the charge fase
 
 def Max_Bat_out(model,s,yt,ut,t): # Minimum flow of energy for the discharge fase
     return model.Battery_Outflow[s,yt,t] <= model.Battery_Maximum_Discharge_Power[ut]*model.Delta_Time
+
     
+def Max_Bat_out2(model,s,yt,ut,t): # Minimum flow of energy for the discharge fase
+    return model.Battery_Outflow[s,yt,t] <= model.Energy_Demand[s,yt,t]
+
 def Battery_Min_Capacity(model,ut):    
     return   model.Battery_Nominal_Capacity[ut] >= model.Battery_Min_Capacity[ut]
 
@@ -329,6 +336,9 @@ def Battery_Min_Step_Capacity(model,yt,ut):
 "Diesel generator constraints"
 def Maximun_Generator_Energy(model,s,yt,ut,g,t): # Maximum energy output of the diesel generator
     return model.Generator_Energy_Production[s,yt,g,t] <= model.Generator_Nominal_Capacity[ut,g]*model.Delta_Time
+
+def Maximun_Generator_Energy2(model,s,yt,ut,g,t): # Maximum energy output of the diesel generator
+    return model.Generator_Energy_Production[s,yt,g,t] <= model.Energy_Demand[s,yt,t]
 
 def Generator_Min_Step_Capacity(model,yt,ut,g):
     if ut > 1:

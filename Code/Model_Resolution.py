@@ -113,6 +113,12 @@ def Model_Resolution(model, Optimization_Goal, Renewable_Penetration, Battery_In
                                                 model.years_steps, 
                                                 model.periods,
                                                 rule=Max_Bat_out) #minimun flow of energy for the discharge fase
+    
+    model.Maxbatout2               = Constraint(model.scenarios, 
+                                                model.years_steps, 
+                                                model.periods,
+                                                rule=Max_Bat_out2) #minimun flow of energy for the discharge fase
+    
     model.BatteryMinStepCapacity   = Constraint(model.years_steps, 
                                                 rule=Battery_Min_Step_Capacity)
     if Battery_Independence > 0:
@@ -125,6 +131,13 @@ def Model_Resolution(model, Optimization_Goal, Renewable_Penetration, Battery_In
                                                 model.generator_types,
                                                 model.periods, 
                                                 rule=Maximun_Generator_Energy) # Maximun energy output of the diesel generator
+    
+    model.MaximunFuelEnergy2        = Constraint(model.scenarios, 
+                                                model.years_steps, 
+                                                model.generator_types,
+                                                model.periods, 
+                                                rule=Maximun_Generator_Energy2) # Maximun energy output of the diesel generator
+    
     model.GeneratorMinStepCapacity = Constraint(model.years_steps, 
                                                 model.generator_types, 
                                                 rule = Generator_Min_Step_Capacity)
