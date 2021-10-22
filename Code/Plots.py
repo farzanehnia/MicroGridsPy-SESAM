@@ -25,7 +25,7 @@ from matplotlib import pyplot
 def DispatchPlot(instance,TimeSeries,PlotScenario,PlotDate,PlotTime,PlotResolution,PlotFormat):
 
     print('\nPlots: plotting energy dispatch...')
-    fontticks = 212
+    fontticks = 14
     fonttitles = 16
     fontaxis = 15
     fontlegend = 15
@@ -39,6 +39,7 @@ def DispatchPlot(instance,TimeSeries,PlotScenario,PlotDate,PlotTime,PlotResoluti
     ST = int(instance.Steps_Number.extract_values()[None])
     R  = int(instance.RES_Sources.extract_values()[None])
     G  = int(instance.Generator_Types.extract_values()[None])
+    #PlotTime = int(PlotTime/instance.Delta_Time.extract_values()[None])         #Time span to plot in days
     
     RES_Names       = instance.RES_Names.extract_values()
     Generator_Names = instance.Generator_Names.extract_values()
@@ -163,34 +164,40 @@ def DispatchPlot(instance,TimeSeries,PlotScenario,PlotDate,PlotTime,PlotResoluti
     ax1.set_ylabel('Power [kW]', fontsize=fontaxis)
         
     "x axis"
-    xticks_position = [0]
-    ticks = []
+    
+    end_position = int((PlotTime)*pDay) 
+    stepx = 4/instance.Delta_Time.extract_values()[None]
+    xticks_position = np.arange(0, end_position+1, stepx)       # Position of tick marks.
+    ticks = [0]                                                 # This loop creates the x-axis tick marks texts. The length should be equal to that of the position.
     for i in range(1,PlotTime+1):
-        ticks = [d*6 for d in range(PlotTime*4+1)]
-        xticks_position += [d*6-1 for d in range(1,PlotTime*4+1)]
+        ticks += [str(d*4) for d in range(1,6+1)]
+
             
     ax1.set_xticks(xticks_position)
-    # ax1.set_xticklabels(ticks, fontsize=fontticks)
-    ax1.set_xlim(xmin=0)
-    ax1.set_xlim(xmax=xticks_position[-1])
+    ax1.set_xticklabels(ticks, fontsize=fontticks)
+    #ax1.set_xlim(xmax=xticks_position[-1])
+    #ax1.set_xlim(xmin=xticks_position[0])
     ax1.margins(x=0)
     ax1.tick_params(axis="x", direction="in")
     ax1.tick_params(axis="y", direction="in") 
     
     "primary y axis"
-    # ax1.set_yticklabels(ax1.get_yticks(), fontsize=fontticks) 
+    
     ax1.margins(y=0)
     ax1.grid(True, zorder=2)
-    #ax1.set_yticks(np.arange(None, None, 100))
-    #ax1.set_yticks([min(y),max(y)])
-    #matplotlib.axes.Axes.set_yscale(1, 'linear')
-    #ax1.grid(True, which='both')
-    stepy=(max(ax1.get_yticks())-min(ax1.get_yticks()))/10;
-    ax1.set_yticks(np.arange(min(ax1.get_yticks()) ,max(ax1.get_yticks())  , stepy ));
-    #import matplotlib.ticker as plticker
-    #loc = plticker.MultipleLocator() # this locator puts ticks at regular intervals
-    #ax1.yaxis.set_major_locator(loc)
+
+    miny = np.floor( min(ax1.get_yticks())/10 )*10
+    maxy = np.ceil( max(ax1.get_yticks())/10 )*10
+    stepy =  round( (maxy-miny)/100 ) * 10
+
+    yticks_positive = np.arange(0, maxy+1  , stepy)
+    yticks_negative = np.arange(0, miny-1  , -stepy)
     
+    ax1yticks = np.unique(np.concatenate((yticks_negative, yticks_positive), axis=None))
+    ax1.set_yticks(ax1yticks);
+    ax1.set_yticklabels(ax1.get_yticks(), fontsize=fontticks)  
+        
+        
        
     "secondary y axis"
     if BESSNominalCapacity[PlotStep] >= 1:
@@ -199,7 +206,7 @@ def DispatchPlot(instance,TimeSeries,PlotScenario,PlotDate,PlotTime,PlotResoluti
         ax2.set_ylabel('Battery state of charge [%]', fontsize=fontaxis)
 
         ax2.set_yticks(np.arange(0,100.00000001,20))
-        # ax2.set_yticklabels(np.arange(0,100.00000001,20), fontsize=fontticks)
+        ax2.set_yticklabels(np.arange(0,100.00000001,20), fontsize=fontticks)
         ax2.set_ylim(ymin=0)
         ax2.set_ylim(ymax=100.00000001)
         ax2.margins(y=0)
@@ -473,7 +480,7 @@ def CashFlowPlot(instance,Results,PlotResolution,PlotFormat):
 def SizePlot(instance,Results,PlotResolution,PlotFormat):
 
     print('       plotting components size...')
-    fontticks = 212
+    fontticks = 14
     fontaxis = 21
     fontlegend = 20
     
